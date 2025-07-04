@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeChic Magazine - Digital Flipbook</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background music -->
+    <audio id="backgroundMusic" loop>
+        <source src="music/background.mp3" type="audio/mpeg">
+        <source src="music/background.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Table surface -->
+    <div class="table-surface">
+        <div class="table-texture"></div>
+        
+        <!-- Book shadow when closed -->
+        <div class="book-shadow" id="bookShadow"></div>
+        
+        <!-- Flipbook container -->
+        <div class="flipbook-container" id="flipbookContainer">
+            <div class="book-spine" id="bookSpine"></div>
+            
+            <div class="flipbook" id="flipbook">
+                <!-- Cover page (single A4 portrait) -->
+                <div class="page cover-page" data-page="0">
+                    <div class="page-front">
+                        <img src="images/0.png" alt="PokeChic Magazine Cover" class="page-image">
+                    </div>
+                    <div class="page-back">
+                        <!-- Back of cover shows first spread -->
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/1.png" alt="Page 1" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/2.png" alt="Page 2" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Spread 1 (Pages 3-4) -->
+                <div class="page spread-page" data-page="1">
+                    <div class="page-front">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/3.png" alt="Page 3" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/4.png" alt="Page 4" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-back">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/5.png" alt="Page 5" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/6.png" alt="Page 6" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Spread 2 (Pages 7-8) -->
+                <div class="page spread-page" data-page="2">
+                    <div class="page-front">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/7.png" alt="Page 7" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/8.png" alt="Page 8" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-back">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/9.png" alt="Page 9" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/10.png" alt="Page 10" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Spread 3 (Pages 11-12) -->
+                <div class="page spread-page" data-page="3">
+                    <div class="page-front">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/11.png" alt="Page 11" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/12.png" alt="Page 12" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-back">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/13.png" alt="Page 13" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/14.png" alt="Page 14" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Spread 4 (Pages 15-16) -->
+                <div class="page spread-page" data-page="4">
+                    <div class="page-front">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/15.png" alt="Page 15" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/16.png" alt="Page 16" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-back">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/17.png" alt="Page 17" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/18.png" alt="Page 18" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Spread 5 (Pages 19-20) -->
+                <div class="page spread-page" data-page="5">
+                    <div class="page-front">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/19.png" alt="Page 19" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/20.png" alt="Page 20" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-back">
+                        <div class="spread">
+                            <div class="left-page">
+                                <img src="images/21.png" alt="Page 21" class="page-image">
+                            </div>
+                            <div class="right-page">
+                                <img src="images/22.png" alt="Page 22" class="page-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Back cover (single A4 portrait) -->
+                <div class="page back-cover-page" data-page="6">
+                    <div class="page-front">
+                        <img src="images/23.png" alt="Back Cover" class="page-image">
+                    </div>
+                    <div class="page-back">
+                        <!-- Thank you page -->
+                        <div class="thank-you-page">
+                            <div class="thank-you-content">
+                                <h1>Thank You for Reading!</h1>
+                                <p>We hope you enjoyed this issue of PokeChic Magazine</p>
+                                <div class="pokeball-icon">⚪</div>
+                                <button class="restart-btn" id="restartBtn">Read Again</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced controls -->
+        <div class="controls" id="controls">
+            <button id="musicToggle" class="music-btn" title="Toggle Music">🎵</button>
+            <button id="prevBtn" class="nav-btn">← Previous</button>
+            <div class="page-info">
+                <span id="pageIndicator">Cover</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <button id="nextBtn" class="nav-btn">Next →</button>
+            <button id="fullscreenBtn" class="fullscreen-btn" title="Fullscreen">⛶</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+
