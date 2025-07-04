@@ -1,0 +1,509 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #d2b48c 100%);
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Table surface with wood texture */
+.table-surface {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at center, rgba(139, 69, 19, 0.1) 0%, rgba(44, 24, 16, 0.3) 100%),
+        linear-gradient(45deg, #8b4513 25%, transparent 25%),
+        linear-gradient(-45deg, #8b4513 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #8b4513 75%),
+        linear-gradient(-45deg, transparent 75%, #8b4513 75%);
+    background-size: 200px 200px, 60px 60px, 60px 60px, 60px 60px, 60px 60px;
+    background-position: 0 0, 0 0, 0 30px, 30px -30px, -30px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+    perspective: 2000px;
+}
+
+.table-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(
+            90deg,
+            rgba(139, 69, 19, 0.1) 0px,
+            rgba(139, 69, 19, 0.1) 2px,
+            transparent 2px,
+            transparent 98px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(160, 82, 45, 0.05) 0px,
+            rgba(160, 82, 45, 0.05) 1px,
+            transparent 1px,
+            transparent 12px
+        );
+    pointer-events: none;
+}
+
+/* Book shadow when closed */
+.book-shadow {
+    position: absolute;
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translateY(50px) scaleY(0.3);
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+}
+
+.book-shadow.hidden {
+    opacity: 0;
+}
+
+/* Flipbook container */
+.flipbook-container {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+}
+
+.flipbook-container.opened {
+    transform: rotateX(-5deg) rotateY(0deg);
+}
+
+/* Book spine */
+.book-spine {
+    position: absolute;
+    left: -15px;
+    top: 0;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(to right, #2c1810, #4a2c1a, #2c1810);
+    border-radius: 8px 0 0 8px;
+    box-shadow: 
+        inset 2px 0 4px rgba(0, 0, 0, 0.3),
+        -5px 0 15px rgba(0, 0, 0, 0.4);
+    z-index: 0;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.book-spine.hidden {
+    opacity: 0;
+}
+
+/* Main flipbook */
+.flipbook {
+    position: relative;
+    width: 842px; /* A4 width in pixels at 72 DPI */
+    height: 595px; /* A4 height in pixels at 72 DPI */
+    transform-style: preserve-3d;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 10px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    background: #fff;
+}
+
+/* Individual pages */
+.page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.page-front,
+.page-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.page-back {
+    transform: rotateY(180deg);
+}
+
+.page-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 8px;
+}
+
+/* Page stacking and flipping */
+.page-0 { z-index: 12; }
+.page-1 { z-index: 11; }
+.page-2 { z-index: 10; }
+.page-3 { z-index: 9; }
+.page-4 { z-index: 8; }
+.page-5 { z-index: 7; }
+.page-6 { z-index: 6; }
+.page-7 { z-index: 5; }
+.page-8 { z-index: 4; }
+.page-9 { z-index: 3; }
+.page-10 { z-index: 2; }
+.page-11 { z-index: 1; }
+
+.page.flipped {
+    transform: rotateY(-180deg);
+}
+
+.page.flipping {
+    transition-duration: 1.2s;
+}
+
+/* Page flip shadow effect */
+.page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.1) 20%,
+        rgba(0, 0, 0, 0.3) 50%,
+        rgba(0, 0, 0, 0.1) 80%,
+        transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+    border-radius: 8px;
+}
+
+.page.flipping::before {
+    opacity: 1;
+}
+
+/* Thank you overlay */
+.thank-you-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 100;
+    border-radius: 8px;
+}
+
+.thank-you-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.thank-you-content {
+    text-align: center;
+    padding: 50px;
+}
+
+.thank-you-content h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+}
+
+.thank-you-content p {
+    font-size: 1.5em;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+.pokeball-icon {
+    font-size: 4em;
+    margin-bottom: 30px;
+    animation: bounce 2s infinite;
+}
+
+.restart-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.restart-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Enhanced controls */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px 30px;
+    border-radius: 60px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.2),
+        0 5px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 1000;
+}
+
+.nav-btn, .music-btn, .fullscreen-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    font-family: 'Poppins', sans-serif;
+}
+
+.music-btn, .fullscreen-btn {
+    padding: 12px 16px;
+    font-size: 18px;
+}
+
+.nav-btn:hover, .music-btn:hover, .fullscreen-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.nav-btn:active, .music-btn:active, .fullscreen-btn:active {
+    transform: translateY(0);
+}
+
+.nav-btn:disabled {
+    background: linear-gradient(135deg, #ccc 0%, #999 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.music-btn.muted {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+}
+
+.page-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+}
+
+#pageIndicator {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+/* Responsive design */
+@media (max-width: 1000px) {
+    .flipbook {
+        width: 90vw;
+        height: calc(90vw * 0.707); /* A4 aspect ratio */
+        max-width: 700px;
+        max-height: 495px;
+    }
+    
+    .controls {
+        padding: 15px 20px;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .nav-btn, .music-btn, .fullscreen-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .music-btn, .fullscreen-btn {
+        padding: 10px 14px;
+        font-size: 16px;
+    }
+    
+    #pageIndicator {
+        font-size: 16px;
+    }
+    
+    .progress-bar {
+        width: 80px;
+    }
+}
+
+@media (max-width: 600px) {
+    .flipbook {
+        width: 95vw;
+        height: calc(95vw * 0.707);
+    }
+    
+    .controls {
+        padding: 12px 15px;
+        gap: 10px;
+    }
+    
+    .nav-btn {
+        flex: 1;
+        min-width: 80px;
+    }
+    
+    .page-info {
+        order: -1;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .thank-you-content h1 {
+        font-size: 2em;
+    }
+    
+    .thank-you-content p {
+        font-size: 1.2em;
+    }
+    
+    .pokeball-icon {
+        font-size: 3em;
+    }
+}
+
+/* Fullscreen styles */
+.fullscreen-mode {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #d2b48c 100%);
+}
+
+.fullscreen-mode .flipbook {
+    width: 90vw;
+    height: calc(90vw * 0.707);
+    max-width: 1200px;
+    max-height: 849px;
+}
+
+/* Loading animation */
+.flipbook {
+    animation: bookAppear 1s ease-out;
+}
+
+@keyframes bookAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) rotateY(-30deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+    }
+}
+
+/* Page hover effects */
+.page:hover {
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.5),
+        0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Custom scrollbar for any overflow */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
